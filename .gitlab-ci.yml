@@ -1,0 +1,40 @@
+image: docker:latest
+
+variables:
+  REPOSITORY_URL: fatmaist1/expressjs-todo-unit-testing
+  IMAGE_TAG: latest
+
+services:
+  - docker:dind
+
+before-script:
+  docker login --username=$DH_USERNAME --password=$DH_PASSWORD
+
+stages:
+  - build
+  - deploy
+
+build:
+  stage: build
+  script:
+    - echo "Building image .."
+
+    - docker build
+      -t expressjs-todo-unit-testing:latest
+      --build-arg PORT=$PORT
+      --no-cache .
+    -echo "tagging image .."
+    - docker tag expressjs-todo-unit-testing:latest $REPOSITORY_URL:latest
+    - echo "pushing image .."
+    - docker push $REPOSITORY_URL:latest
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  script:
+    - docker stop expressjs-todo-unit-testing || true && docker rm expressjs-todo-unit-testing || true
+    - docker container run -dt -p $PORT:$PORT --name expressjs-todo-unit-testing $REPOSITORY_URL:latest
+    - docker image prune -f
+  only:
+    - master
