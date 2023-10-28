@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --detectOpenHandles",
+    "seed": "node db/seeding.js",
     "start": "nodemon index.js"
   },
   "author": "",
