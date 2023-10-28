@@ -1,6 +1,6 @@
 var express = require('express')
 var router = express.Router()
-var pool = require('./queries')
+var pool = require('../queries')
 var bodyParser = require('body-parser')
 
 router.use(bodyParser.json())
@@ -37,7 +37,7 @@ router.post('/todo', function (req, res) {
                 res.json({message: "Failed to insert!"})
                 return
             }
-            res.json({message: "New Todo created.", location: "/todo/" + id})
+            res.json({message: "New Todo created."})
         })
     }
 })
@@ -54,7 +54,24 @@ router.delete('/todo/:id', function (req, res) {
         if (result.rowCount === 0) {
             res.json({ message: 'Not Found.' })
         } else {
-            res.json({ message: "Todo " + todoId + " soft-deleted.", location: "/todo/" + todoId })
+            res.json({ message: "Todo " + todoId + " soft-deleted." })
+        }
+    })
+})
+
+// API DELETE PERMANENTLY TODO
+router.delete('/delete/todo/:id', function (req, res) {
+    var todoId = req.params.id
+
+    pool.query('DELETE FROM TODO WHERE id = $1', [todoId], (err, result) => {
+        if (err) {
+            res.send('Failed to delete!')
+            return
+        }
+        if (result.rowCount === 0) {
+            res.json({ message: 'Not Found.' })
+        } else {
+            res.json({ message: "Todo Deleted" })
         }
     })
 })
