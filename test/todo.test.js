@@ -30,7 +30,7 @@ describe('Todo Test', () => {
 
     test('Add Todo', (done) => {
         const newTodo = {
-            id: "5",
+            id: "10",
             task: "Buy a new shirt",
             date: "2023-10-30",
             status: "Not Started"
@@ -47,7 +47,7 @@ describe('Todo Test', () => {
     })
 
     test('Delete Todo', (done) => {
-        const id = 5
+        const id = 10
 
         request(app)
         .delete(`/api/delete/todo/${id}`)

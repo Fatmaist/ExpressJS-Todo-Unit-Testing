@@ -1,14 +1,14 @@
 image: docker:latest
 
 variables:
-  REPOSITORY_URL: fatmaist1/expressjs-todo-unit-testing
+  REPOSITORY_URL: fatmaist/expressjs-todo-unit-testing
   IMAGE_TAG: latest
 
 services:
   - docker:dind
 
 before-script:
-  docker login --username=$DH_USERNAME --password=$DH_PASSWORD
+  - docker login --username=$DH_USERNAME --password=$DH_PASSWORD
 
 stages:
   - build
@@ -28,7 +28,7 @@ build:
     - echo "pushing image .."
     - docker push $REPOSITORY_URL:latest
   only:
-    - master
+    - main
 
 deploy:
   stage: deploy
@@ -37,4 +37,4 @@ deploy:
     - docker container run -dt -p $PORT:$PORT --name expressjs-todo-unit-testing $REPOSITORY_URL:latest
     - docker image prune -f
   only:
-    - master
+    - main
